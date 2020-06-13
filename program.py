@@ -7,7 +7,7 @@ class Program(object):
         print(f'This is your number: {self.dice.value}, should I roll again?')
 
     def get_user_input(self):
-        choice = str(input())
+        choice = str(input()).lower()
         if choice == "yes":
             self.dice.set_value()
         elif choice == "no":

@@ -52,7 +52,13 @@ def test_roll_flow(programs_array, capsys):
         with mock.patch('builtins.input', return_value="yes"):
             program.get_user_input()
             assert program.exit is False
+        with mock.patch('builtins.input', return_value="YeS"):
+            program.get_user_input()
+            assert program.exit is False
         with mock.patch('builtins.input', return_value="no"):
+            program.get_user_input()
+            assert program.exit is True
+        with mock.patch('builtins.input', return_value="nO"):
             program.get_user_input()
             assert program.exit is True
         with mock.patch('builtins.input', return_value="asdqwer"):
