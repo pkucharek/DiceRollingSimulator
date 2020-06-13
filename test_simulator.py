@@ -49,21 +49,19 @@ def test_program(programs_array: List[Program], capsys):
         assert captured.out == f'This is your number: {program.dice.value}, should I roll again?\n'
 
 
-def test_roll_flow(programs_array: List[Program], capsys):
+@pytest.mark.parametrize("text, expected_exit, expected_text", [
+    ("yes", False, ''),
+    ("YeS", False, ''),
+    ("asdqwer", False, "Type 'yes' or 'no'!\n"),
+    ("no", True, ''),
+    ("nO", True, ''),
+])
+def test_roll_flow(programs_array: List[Program], capsys,
+                   text: str, expected_exit: bool,
+                   expected_text: str):
     for program in programs_array:
-        with mock.patch('builtins.input', return_value="yes"):
-            program.get_user_input()
-            assert program.exit is False
-        with mock.patch('builtins.input', return_value="YeS"):
-            program.get_user_input()
-            assert program.exit is False
-        with mock.patch('builtins.input', return_value="no"):
-            program.get_user_input()
-            assert program.exit is True
-        with mock.patch('builtins.input', return_value="nO"):
-            program.get_user_input()
-            assert program.exit is True
-        with mock.patch('builtins.input', return_value="asdqwer"):
+        with mock.patch('builtins.input', return_value=text):
             program.get_user_input()
             captured = capsys.readouterr()
-            assert captured.out == "Type 'yes' or 'no'!\n"
+            assert program.exit is expected_exit
+            assert captured.out == expected_text
